@@ -51,3 +51,7 @@ exports.getUpcomingEventEvent = async (req, res) => {
   const fights = await Fight.find({ eventId: latestEvent._id });
   res.status(StatusCodes.OK).json({ data: fights });
 };
+
+exports.calculateResults = async (req, res) => {
+  res.status(StatusCodes.OK).json({ msg: "results calculated" });
+};
