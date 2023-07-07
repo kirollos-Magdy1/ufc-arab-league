@@ -10,6 +10,19 @@ const UserPredictionSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
+    predictions: [
+      {
+        fightId: mongoose.Schema.ObjectId,
+        winnerFighter: {
+          type: String,
+          enum: ["red", "blue"],
+        },
+        winMethod: {
+          type: String,
+          enum: ["KO/TKO", "Submission", "Decision"],
+        },
+      },
+    ],
     score: {
       type: Number,
       default: 0,
@@ -18,4 +31,4 @@ const UserPredictionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserPredictionSchema);
+module.exports = mongoose.model("UserPrediction", UserPredictionSchema);

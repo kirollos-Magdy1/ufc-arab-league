@@ -2,13 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  createUpcomingEvent,
-  getUpcomingEventEvent,
-} = require("../controllers/adminController");
+  createPredictions,
+  getStandings,
+} = require("../controllers/userControllers");
 
-router
-  .route("/upcomingEvent")
-  .post(createUpcomingEvent)
-  .get(getUpcomingEventEvent);
+router.get("/standings", getStandings);
+
+router.post("/predictions/:eventId", createPredictions);
 
 module.exports = router;
