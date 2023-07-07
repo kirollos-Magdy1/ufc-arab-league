@@ -8,11 +8,15 @@ const EventSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 50,
     },
+    eventDate: {
+      type: Date,
+    },
     closeTime: {
       type: Date,
     },
     subscribers: {
       type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

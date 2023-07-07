@@ -4,7 +4,7 @@ const cors = require("cors");
 const compression = require("compression");
 
 const mountRoutes = require("./routes");
-const notFoundMiddleware = require("./middleware/not-found");
+const notFoundMiddleware = require("./middlewares/not-found");
 const errorHandlerMiddleware = require("./middlewares/error-handler");
 
 // express
@@ -39,7 +39,7 @@ const start = async () => {
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
-    await connectDB(process.env.MONGO_URL);
+    await connectDB(process.env.MONGO_URI);
   } catch (error) {
     console.log(error);
   }
