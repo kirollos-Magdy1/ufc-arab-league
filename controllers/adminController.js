@@ -6,6 +6,7 @@ const parseDate = require("../utils/parse-date");
 const { StatusCodes } = require("http-status-codes");
 const Fight = require("../models/Fight");
 const UserPredictions = require("../models/UserPredictions");
+const Standings = require("../models/Standings");
 
 // @desc    Add the upcoming event
 // @route   POST /api/v1/admin/upcomingEvent
@@ -80,5 +81,27 @@ exports.calcScores = async (req, res) => {
     // console.log(userPrediction.score);
     await userPrediction.save();
   });
-  res.status(StatusCodes.OK).json({ msg: "results calculated" });
+  res.status(StatusCodes.CREATED).json({ msg: "results calculated" });
+};
+
+// @desc    create standings based on user prediction score
+// @route   POST /api/v1/admin/standings/:eventId
+// @access  Protected/Admin
+
+exports.createStandings = async (req, res) => {
+  const { eventId } = req.params;
+  const userPredictions = await UserPredictions.find({ eventId });
+  userPredictions.sort((up1, up2) => up2.score - up1.score);
+  console.log(userPredictions);
+  let rank = 1;
+  let prevScore = userPredictions[0].score;
+  for (let i = 0; i < userPredictions.length; i++) {
+    if (userPredictions[i].score < prevScore) {
+      rank = i + 1;
+      prevScore = userPredictions[i].score;
+    }
+    userPredictions[i].rank = rank;
+    await userPredictions[i].save();
+  }
+  res.status(StatusCodes.CREATED).json({ msg: "standing created" });
 };

@@ -27,6 +27,9 @@ const UserPredictionSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    rank: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

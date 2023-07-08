@@ -9,7 +9,7 @@ const {
 
 router.get("/", getUpcomingEventEvent);
 
-router.get("/standings", getStandings);
+router.get("/standings/:eventId", getStandings);
 
 router.post("/predictions/:eventId", createPredictions);
 

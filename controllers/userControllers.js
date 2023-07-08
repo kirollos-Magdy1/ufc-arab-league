@@ -32,7 +32,25 @@ exports.getUpcomingEventEvent = async (req, res) => {
   res.status(StatusCodes.OK).json({ data: fights });
 };
 
-exports.getStandings = async (req, res) => {};
+// @desc    get event standings
+// @route   GET /api/v1/user/standings/:eventId
+// @access  Public
+
+exports.getStandings = async (req, res) => {
+  const { eventId } = req.params.eventId;
+
+  const rankedUserPredictions = await UserPrediction.find(eventId)
+    .sort({
+      score: -1,
+    })
+    .select("rank score")
+    .populate({
+      path: "userId",
+      select: "name -_id",
+    });
+
+  res.status(StatusCodes.OK).json({ data: rankedUserPredictions });
+};
 
 exports.updateProfile = async (req, res) => {};
 
