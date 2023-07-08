@@ -6,7 +6,7 @@ const FightSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
-    cardTag: {
+    tag: {
       type: String,
       enum: ["main-card", "prelims", "early-prelims"],
       default: "main-card",
@@ -42,11 +42,13 @@ const FightSchema = new mongoose.Schema(
     results: {
       winnerFighter: {
         type: String,
-        enum: ["red", "blue"],
+        enum: ["red", "blue", "pending"],
+        default: "pending",
       },
       winMethod: {
         type: String,
-        enum: ["KO/TKO", "Submission", "Decision"],
+        enum: ["KO/TKO", "Submission", "Decision", "pending"],
+        default: "pending",
       },
     },
   },

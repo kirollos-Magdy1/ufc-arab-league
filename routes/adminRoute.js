@@ -3,12 +3,11 @@ const router = express.Router();
 
 const {
   createUpcomingEvent,
-  getUpcomingEventEvent,
+  calcScores,
 } = require("../controllers/adminController");
 
-router
-  .route("/upcomingEvent")
-  .post(createUpcomingEvent)
-  .get(getUpcomingEventEvent);
+router.route("/upcomingEvent").post(createUpcomingEvent);
+
+router.post("/calcScore/:eventId", calcScores);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const axios = require("axios");
 const parseDate = require("../utils/parse-date");
 const { StatusCodes } = require("http-status-codes");
 const Fight = require("../models/Fight");
+const UserPredictions = require("../models/UserPredictions");
 
 // @desc    Add the upcoming event
 // @route   POST /api/v1/admin/upcomingEvent
@@ -42,16 +43,42 @@ exports.createUpcomingEvent = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ msg: "event and fights created" });
 };
 
-// @desc    get the upcoming event fights
-// @route   GET /api/v1/admin/upcomingEvent
+// @desc    update the user prediction by providing scores
+// @route   PATCH /api/v1/admin/calcScore/:eventId
 // @access  Protected/Admin
 
-exports.getUpcomingEventEvent = async (req, res) => {
-  const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
-  const fights = await Fight.find({ eventId: latestEvent._id });
-  res.status(StatusCodes.OK).json({ data: fights });
-};
+exports.calcScores = async (req, res) => {
+  const { eventId } = req.params;
+  const points = {
+    "main-card": [10, 5],
+    prelims: [7, 3],
+    "early-prelims": [5, 2],
+  };
+  const fights = await Fight.find({ eventId });
+  const userPredictions = await UserPredictions.find({
+    eventId,
+    score: { $eq: 0 },
+  });
 
-exports.calculateResults = async (req, res) => {
+  userPredictions.forEach(async (userPrediction) => {
+    userPrediction.predictions.forEach(async (prediction) => {
+      const fight = fights.find((fight) => {
+        return fight._id.toString() === prediction.fightId.toString();
+      });
+      if (
+        prediction.winnerFighter === fight.results.winnerFighter &&
+        prediction.winMethod === fight.results.winMethod
+      ) {
+        userPrediction.score +=
+          (points[fight["tag"]][0] + points[fight["tag"]][1]) * 2;
+      } else if (prediction.winnerFighter === fight.results.winnerFighter) {
+        userPrediction.score += points[fight["tag"]][0];
+      } else if (prediction.winMethod === fight.results.winMethod) {
+        userPrediction.score += points[fight["tag"]][1];
+      }
+    });
+    // console.log(userPrediction.score);
+    await userPrediction.save();
+  });
   res.status(StatusCodes.OK).json({ msg: "results calculated" });
 };

@@ -4,7 +4,10 @@ const router = express.Router();
 const {
   createPredictions,
   getStandings,
+  getUpcomingEventEvent,
 } = require("../controllers/userControllers");
+
+router.get("/", getUpcomingEventEvent);
 
 router.get("/standings", getStandings);
 
