@@ -39,7 +39,11 @@ const start = async () => {
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
-    await connectDB(process.env.MONGO_URI);
+    connectDB(
+      process.env.NODE_ENV === "development"
+        ? process.env.MONGO_URI
+        : process.env.MONGO_URI_PROD
+    );
   } catch (error) {
     console.log(error);
   }

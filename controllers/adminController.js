@@ -25,7 +25,6 @@ exports.createUpcomingEvent = async (req, res) => {
 
   const response = await axios.request(options);
   let fights = response.data;
-  console.log(fights);
 
   const event = await Event.create({
     title,
