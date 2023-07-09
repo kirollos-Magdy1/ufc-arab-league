@@ -14,23 +14,25 @@ const UserPrediction = require("../models/UserPredictions");
 exports.createPredictions = async (req, res) => {
   const { eventId } = req.params;
   req.body = { ...req.body, eventId, userId: req.user._id };
-  console.log(req.body);
   const userPrediction = await UserPrediction.create(req.body);
-  res.status(StatusCodes.CREATED).send(userPrediction);
+  res.status(StatusCodes.CREATED).json({ data: userPrediction });
 };
 
 // @desc    edit fights predictions for a given event.
 // @route   PATCH /api/v1/user/predictions
 // @access  Private/user
 exports.editPredictions = async (req, res) => {
-  const { eventId } = req.params;
+  const { userPredictionId } = req.params;
   const userId = req.user._id;
-  const userPrediction = await UserPrediction.updateOne(
-    { eventId, userId },
+  const userPrediction = await UserPrediction.findOneAndUpdate(
+    { _id: userPredictionId, userId },
     req.body,
-    { new: true }
+    {
+      new: true,
+      runValidators: true,
+    }
   );
-  res.status(StatusCodes.OK).send(userPrediction);
+  res.status(StatusCodes.OK).json({ data: userPrediction });
 };
 
 // @desc    get the upcoming event fights

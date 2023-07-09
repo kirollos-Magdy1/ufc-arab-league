@@ -16,7 +16,7 @@ router.get("/", getUpcomingEventEvent);
 router.use(authenticate);
 
 router.post("/predictions/:eventId", createPredictions);
-router.patch("/predictions/:eventId", editPredictions);
+router.patch("/predictions/:userPredictionId", editPredictions);
 router.route("/profile").get(getProfile);
 
 module.exports = router;
