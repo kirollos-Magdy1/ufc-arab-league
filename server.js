@@ -24,7 +24,8 @@ app.use(compression());
 // set up session cookies
 app.use(
   cookieSession({
-    maxAge: 24 * 60 * 60 * 1000,
+    name: "session",
+    maxAge: 60 * 60 * 1000,
     keys: [process.env.cookieKey],
   })
 );

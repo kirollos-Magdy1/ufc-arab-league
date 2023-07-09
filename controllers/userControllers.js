@@ -28,6 +28,8 @@ exports.updatePredictions = async (req, res) => {};
 
 exports.getUpcomingEventEvent = async (req, res) => {
   // console.log(req.user._id.toString());
+  console.log(req.headers.cookie);
+  console.log(req.user);
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
   const fights = await Fight.find({ eventId: latestEvent._id });
   res.status(StatusCodes.OK).json({
@@ -59,6 +61,8 @@ exports.getStandings = async (req, res) => {
   res.status(StatusCodes.OK).json({ data: rankedUserPredictions });
 };
 
-exports.updateProfile = async (req, res) => {};
+exports.getProfile = async (req, res) => {
+  res.status(StatusCodes.OK).send(req.user);
+};
 
-exports.getProfile = async (req, res) => {};
+exports.updateProfile = async (req, res) => {};
