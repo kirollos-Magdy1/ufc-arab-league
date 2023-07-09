@@ -1,6 +1,14 @@
-const User = require("../models/userModel");
+const { StatusCodes } = require("http-status-codes");
+const passport = require("passport");
 
-// @desc    Register/login user through google auth
-// @route   POST /api/v1/createLatestEvent
-// @access  Public
-exports.login = async (req, res) => {};
+// send google consent  screen
+exports.googleAuth = passport.authenticate("google", { scope: ["profile"] });
+
+exports.googleAuthRedirect = async (req, res) => {
+  res.redirect("../../user");
+};
+
+exports.logout = async (req, res) => {
+  req.logout();
+  res.status(StatusCodes.OK).send({ msg: "user logged out" });
+};

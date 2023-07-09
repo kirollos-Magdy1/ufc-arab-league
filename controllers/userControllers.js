@@ -27,9 +27,16 @@ exports.updatePredictions = async (req, res) => {};
 // @access  Public
 
 exports.getUpcomingEventEvent = async (req, res) => {
+  // console.log(req.user._id.toString());
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
   const fights = await Fight.find({ eventId: latestEvent._id });
-  res.status(StatusCodes.OK).json({ data: fights });
+  res.status(StatusCodes.OK).json({
+    data: {
+      eventTitle: latestEvent.title,
+      eventDate: latestEvent.eventDate,
+      fights,
+    },
+  });
 };
 
 // @desc    get event standings

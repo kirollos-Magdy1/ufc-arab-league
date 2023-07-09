@@ -2,6 +2,9 @@ require("dotenv").config();
 require("express-async-errors");
 const cors = require("cors");
 const compression = require("compression");
+const cookieSession = require("cookie-session");
+const passport = require("passport");
+const passportSetup = require("./utils/passsport-setup");
 
 const mountRoutes = require("./routes");
 const notFoundMiddleware = require("./middlewares/not-found");
@@ -18,7 +21,17 @@ app.options("*", cors());
 // compress all responses
 app.use(compression());
 
-const cookieParser = require("cookie-parser");
+// set up session cookies
+app.use(
+  cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [process.env.cookieKey],
+  })
+);
+
+// initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // database connection
 const connectDB = require("./db/connect");
