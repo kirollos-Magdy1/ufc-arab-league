@@ -14,8 +14,8 @@ const UserPrediction = require("../models/UserPredictions");
 exports.createPredictions = async (req, res) => {
   const { eventId } = req.params;
   req.body = { eventId, userId: req.user._id };
-  await UserPrediction.create(req.body);
-  res.status(StatusCodes.CREATED).send("created");
+  const userPrediction = await UserPrediction.create(req.body);
+  res.status(StatusCodes.CREATED).send(userPrediction);
 };
 
 // @desc    edit fights predictions for a given event.
@@ -24,8 +24,12 @@ exports.createPredictions = async (req, res) => {
 exports.editPredictions = async (req, res) => {
   const { eventId } = req.params;
   const userId = req.user._id;
-  await UserPrediction.updateOne({ eventId, userId }, req.body)(req.body);
-  res.status(StatusCodes.OK).send("updated");
+  const userPrediction = await UserPrediction.updateOne(
+    { eventId, userId },
+    req.body,
+    { new: true }
+  );
+  res.status(StatusCodes.OK).send(userPrediction);
 };
 
 // @desc    get the upcoming event fights
