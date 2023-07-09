@@ -6,15 +6,17 @@ const {
   getStandings,
   getUpcomingEventEvent,
   getProfile,
+  editPredictions,
 } = require("../controllers/userControllers");
 const { authenticate } = require("../middlewares/authentication");
 
+router.get("/standings/:eventId", getStandings);
 router.get("/", getUpcomingEventEvent);
 
-router.get("/standings/:eventId", getStandings);
+router.use(authenticate);
 
 router.post("/predictions/:eventId", createPredictions);
-
-router.route("/profile").get(authenticate, getProfile);
+router.post("/predictions/:eventId", editPredictions);
+router.route("/profile").get(getProfile);
 
 module.exports = router;
