@@ -13,7 +13,8 @@ const UserPrediction = require("../models/UserPredictions");
 
 exports.createPredictions = async (req, res) => {
   const { eventId } = req.params;
-  req.body = { eventId, userId: req.user._id };
+  req.body = { ...req.body, eventId, userId: req.user._id };
+  console.log(req.body);
   const userPrediction = await UserPrediction.create(req.body);
   res.status(StatusCodes.CREATED).send(userPrediction);
 };
