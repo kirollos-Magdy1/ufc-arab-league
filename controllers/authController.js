@@ -5,7 +5,7 @@ const passport = require("passport");
 exports.googleAuth = passport.authenticate("google", { scope: ["profile"] });
 
 exports.googleAuthRedirect = async (req, res) => {
-  res.redirect("../../user");
+  res.redirect(`${req.host}/api/v1/users`);
 };
 
 exports.logout = async (req, res) => {
