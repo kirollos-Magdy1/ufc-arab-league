@@ -6,7 +6,12 @@ const {
   googleAuth,
   googleAuthRedirect,
   logout,
+  login,
+  register,
 } = require("../controllers/authController");
+
+router.post("/register", register);
+router.post("/login", login);
 
 router.get("/google", googleAuth);
 

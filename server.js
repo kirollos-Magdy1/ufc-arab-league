@@ -5,7 +5,7 @@ const compression = require("compression");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const passportSetup = require("./utils/passsport-setup");
-
+const cookieParser = require("cookie-parser");
 const mountRoutes = require("./routes");
 const notFoundMiddleware = require("./middlewares/not-found");
 const errorHandlerMiddleware = require("./middlewares/error-handler");
@@ -20,6 +20,9 @@ app.options("*", cors());
 
 // compress all responses
 app.use(compression());
+
+// cookieParser
+app.use(cookieParser(process.env.cookieSecret));
 
 // set up session cookies
 app.use(

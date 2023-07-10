@@ -1,11 +1,21 @@
 const { UnauthenticatedError } = require("../errors");
+const { isTokenValid } = require("../utils/jwt");
 
 const authenticate = async (req, res, next) => {
-  if (!req.user) {
-    throw new UnauthenticatedError("please login");
+  const token = req.signedCookies.token;
+  if (!token) {
+    throw new UnauthenticatedError("authentication Invalid");
   }
+  try {
+    const { name, id, role } = isTokenValid({ token });
 
-  next();
+    req.user = { name, id, role };
+    console.log(req.user);
+    next();
+  } catch (error) {
+    console.log(error);
+    throw new UnauthenticatedError("authentication Invalid");
+  }
 };
 
 module.exports = { authenticate };
