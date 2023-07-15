@@ -28,6 +28,20 @@ exports.getUpcomingEventEvent = async (req, res) => {
   });
 };
 
+exports.submitPredictions = async (req, res) => {
+  const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
+
+  req.body = { ...req.body, eventId: latestEvent._id, userId: req.user.id };
+
+  const userPrediction = await UserPrediction.findOneAndUpdate(
+    { userId: req.user.id },
+    req.body
+  );
+  if (!userPrediction) await UserPrediction.create(req.body);
+
+  res.status(StatusCodes.CREATED).json({ msg: "successfully submitted" });
+};
+/*
 // @desc    make fights predictions for a given event.
 // @route   POST /api/v1/user/predictions
 // @access  Private/user
@@ -57,6 +71,7 @@ exports.editPredictions = async (req, res) => {
   );
   res.status(StatusCodes.OK).json({ data: userPrediction });
 };
+*/
 
 exports.getMyPredictions = async (req, res) => {
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
@@ -84,7 +99,11 @@ exports.getOthersPredictions = async (req, res) => {
   const { userPredictionsId } = req.params;
   const uesrPredictions = await UserPrediction.findById(userPredictionsId)
     .populate("eventId")
-    .populate({ path: "predictions.fightId", model: "Fight" });
+    .populate({
+      path: "predictions.fightId",
+      model: "Fight",
+      select: "-results",
+    });
 
   res.status(StatusCodes.OK).json({ data: uesrPredictions });
 };
