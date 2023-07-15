@@ -8,6 +8,9 @@ const {
   logout,
   login,
   register,
+  registerOTP,
+  loginOTP,
+  verifyUser,
 } = require("../controllers/authController");
 
 router.post("/register", register);
@@ -21,6 +24,11 @@ router.get(
   googleAuthRedirect
 );
 
-router.get("/logout", logout);
+router.route("/otp/register").post(registerOTP);
+router.route("/otp/login").post(loginOTP);
+
+router.route("/otp/verify").post(verifyUser);
+
+router.post("/logout", logout);
 
 module.exports = router;

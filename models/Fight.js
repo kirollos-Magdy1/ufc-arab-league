@@ -23,22 +23,6 @@ const FightSchema = new mongoose.Schema(
         },
       },
     ],
-    users: [
-      {
-        userId: {
-          type: mongoose.Schema.ObjectId,
-          ref: "User",
-        },
-        fightWinnerChoice: {
-          type: String,
-          enum: ["red", "blue"],
-        },
-        fightWinMethodChoice: {
-          type: String,
-          enum: ["KO/TKO", "Submission", "Decision"],
-        },
-      },
-    ],
     results: {
       winnerFighter: {
         type: String,

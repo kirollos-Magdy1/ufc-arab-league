@@ -16,10 +16,12 @@ const UserPredictionSchema = new mongoose.Schema(
         winnerFighter: {
           type: String,
           enum: ["red", "blue"],
+          required: true,
         },
         winMethod: {
           type: String,
           enum: ["KO/TKO", "Submission", "Decision"],
+          required: true,
         },
       },
     ],

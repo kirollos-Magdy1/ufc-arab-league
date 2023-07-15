@@ -6,14 +6,37 @@ const parseDate = require("../utils/parse-date");
 const { StatusCodes } = require("http-status-codes");
 const Fight = require("../models/Fight");
 const UserPrediction = require("../models/UserPredictions");
+const { sensitizeUser } = require("../utils/sensitizeData");
+
+// @desc    get the upcoming event fights
+// @route   GET /api/v1/user/upcomingEvent
+// @access  Public
+
+exports.getUpcomingEventEvent = async (req, res) => {
+  // console.log(req.user._id.toString());
+  // console.log(req.headers.cookie);
+  const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
+  const fights = await Fight.find({ eventId: latestEvent._id }).select(
+    "-results"
+  );
+  res.status(StatusCodes.OK).json({
+    data: {
+      eventTitle: latestEvent.title,
+      eventDate: latestEvent.eventDate,
+      fights,
+    },
+  });
+};
 
 // @desc    make fights predictions for a given event.
 // @route   POST /api/v1/user/predictions
 // @access  Private/user
 
 exports.createPredictions = async (req, res) => {
-  const { eventId } = req.params;
-  req.body = { ...req.body, eventId, userId: req.user._id };
+  // const { eventId } = req.params;
+  const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
+
+  req.body = { ...req.body, eventId: latestEvent._id, userId: req.user.id };
   const userPrediction = await UserPrediction.create(req.body);
   res.status(StatusCodes.CREATED).json({ data: userPrediction });
 };
@@ -23,7 +46,7 @@ exports.createPredictions = async (req, res) => {
 // @access  Private/user
 exports.editPredictions = async (req, res) => {
   const { userPredictionId } = req.params;
-  const userId = req.user._id;
+  const userId = req.user.id;
   const userPrediction = await UserPrediction.findOneAndUpdate(
     { _id: userPredictionId, userId },
     req.body,
@@ -35,23 +58,35 @@ exports.editPredictions = async (req, res) => {
   res.status(StatusCodes.OK).json({ data: userPrediction });
 };
 
-// @desc    get the upcoming event fights
-// @route   GET /api/v1/user/upcomingEvent
-// @access  Public
-
-exports.getUpcomingEventEvent = async (req, res) => {
-  // console.log(req.user._id.toString());
-  console.log(req.headers.cookie);
-  console.log(req.user);
+exports.getMyPredictions = async (req, res) => {
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
-  const fights = await Fight.find({ eventId: latestEvent._id });
-  res.status(StatusCodes.OK).json({
-    data: {
-      eventTitle: latestEvent.title,
-      eventDate: latestEvent.eventDate,
-      fights,
-    },
-  });
+
+  const myPredictions = await UserPrediction.findOne({
+    userId: req.user.id,
+    eventId: latestEvent._id,
+  })
+    .populate("eventId")
+    .populate({
+      path: "predictions.fightId",
+      model: "Fight",
+      select: "-results",
+    });
+
+  if (!myPredictions)
+    res
+      .status(StatusCodes.NOT_FOUND)
+      .send({ msg: "you did not submit predictions" });
+
+  res.status(StatusCodes.OK).json({ data: myPredictions });
+};
+
+exports.getOthersPredictions = async (req, res) => {
+  const { userPredictionsId } = req.params;
+  const uesrPredictions = await UserPrediction.findById(userPredictionsId)
+    .populate("eventId")
+    .populate({ path: "predictions.fightId", model: "Fight" });
+
+  res.status(StatusCodes.OK).json({ data: uesrPredictions });
 };
 
 // @desc    get event standings
@@ -70,12 +105,14 @@ exports.getStandings = async (req, res) => {
       path: "userId",
       select: "name -_id",
     });
-
   res.status(StatusCodes.OK).json({ data: rankedUserPredictions });
 };
 
+exports.getMyRank = async (req, res) => {};
+
 exports.getProfile = async (req, res) => {
-  res.status(StatusCodes.OK).send(req.user);
+  const user = await User.findById(req.user.id);
+  res.status(StatusCodes.OK).send({ data: sensitizeUser(user) });
 };
 
 exports.updateProfile = async (req, res) => {};

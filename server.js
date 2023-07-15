@@ -5,6 +5,8 @@ const compression = require("compression");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const hpp = require("hpp");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss");
 
 const passportSetup = require("./utils/passsport-setup");
 const cookieParser = require("cookie-parser");
@@ -26,7 +28,7 @@ app.options("*", cors());
 app.use(compression());
 
 // cookieParser
-app.use(cookieParser(process.env.cookieSecretx));
+app.use(cookieParser(process.env.cookieSecret));
 
 // set up session cookies
 app.use(
@@ -60,6 +62,9 @@ app.use(limiter);
 
 // prevent HTTP Parameter Pollution
 app.use(hpp());
+
+// To remove data using these defaults:
+app.use(mongoSanitize());
 
 //  routers
 mountRoutes(app);

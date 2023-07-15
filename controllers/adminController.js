@@ -91,7 +91,7 @@ exports.createStandings = async (req, res) => {
   const { eventId } = req.params;
   const userPredictions = await UserPredictions.find({ eventId });
   userPredictions.sort((up1, up2) => up2.score - up1.score);
-  console.log(userPredictions);
+  // console.log(userPredictions);
   let rank = 1;
   let prevScore = userPredictions[0].score;
   for (let i = 0; i < userPredictions.length; i++) {
@@ -102,5 +102,6 @@ exports.createStandings = async (req, res) => {
     userPredictions[i].rank = rank;
     await userPredictions[i].save();
   }
+
   res.status(StatusCodes.CREATED).json({ msg: "standing created" });
 };

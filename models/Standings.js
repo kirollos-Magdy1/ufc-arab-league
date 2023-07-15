@@ -8,8 +8,16 @@ const StangingsSchema = new mongoose.Schema(
     },
     users: [
       {
-        userid: mongoose.Schema.ObjectId,
-        score: Number,
+        userId: {
+          type: mongoose.Schema.ObjectId,
+          ref: "User",
+        },
+        score: {
+          type: Number,
+        },
+        rank: {
+          type: Number,
+        },
       },
     ],
   },

@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Please provide name"],
+      // required: [true, "Please provide name"],
       // minlength: 3,
       // maxlength: 50,
     },
@@ -28,15 +28,22 @@ const UserSchema = new mongoose.Schema(
     },
     overallScore: {
       type: Number,
+      default: 0,
     },
     slug: {
       type: String,
       lowercase: true,
     },
     profileImg: String,
-    active: {
+    verified: {
       type: Boolean,
-      default: true,
+      default: false,
+    },
+    verificationCode: {
+      type: String,
+    },
+    verificationCodeExpiresAt: {
+      type: Date,
     },
   },
   { timestamps: true }
