@@ -1,3 +1,4 @@
+const { isTokenValid } = require("../utils/jwt");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
 const passport = require("passport");
@@ -127,9 +128,6 @@ exports.verifyUser = async (req, res) => {
     throw new CustomError.BadRequestError(
       `Verification code is invalid or expired`
     );
-
-  if (user.verified)
-    throw new CustomError.BadRequestError(`User already verified`);
 
   user.verified = true;
   user.verificationCode = undefined;
