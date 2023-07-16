@@ -98,6 +98,8 @@ exports.loginOTP = async (req, res) => {
   user.verificationCode = hashedVerificationCode;
   user.verificationCodeExpiresAt = Date.now() + fiveMins;
 
+  await user.save();
+
   await sendVerificationEmail({
     name: user.name,
     email,
