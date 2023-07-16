@@ -29,6 +29,6 @@ router.route("/otp/login").post(loginOTP);
 
 router.route("/otp/verify").post(verifyUser);
 
-router.post("/logout", logout);
+router.get("/logout", logout);
 
 module.exports = router;

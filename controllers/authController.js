@@ -156,3 +156,13 @@ exports.logout = (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
+
+exports.logout = (req, res) => {
+  res.cookie("token", "logout", {
+    withCredentials: true,
+    httpOnly: false,
+    expires: new Date(Date.now() + 1000),
+  });
+  req.logout();
+  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
+};
