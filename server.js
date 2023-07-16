@@ -45,9 +45,10 @@ app.use(passport.session());
 // database connection
 const connectDB = require("./db/connect");
 
-/*
 // middleware
 app.use(express.json({ limit: "20kb" }));
+
+/*
 
 // request rate limiter
 const limiter = rateLimit({

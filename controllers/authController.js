@@ -49,6 +49,7 @@ exports.login = async (req, res) => {
 };
 
 exports.registerOTP = async (req, res) => {
+  console.log(req.body);
   const { email, name } = req.body;
   const user = await User.findOne({ email });
   if (user) throw new CustomError.BadRequestError("user email already exists");
