@@ -151,8 +151,10 @@ exports.verifyUser = async (req, res) => {
 
 exports.logout = (req, res) => {
   res.cookie("token", "logout", {
-    httpOnly: true,
+    withCredentials: true,
+    httpOnly: false,
     expires: new Date(Date.now() + 1000),
   });
+
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };

@@ -1,3 +1,5 @@
+const http = require("http");
+const https = require("https");
 require("dotenv").config();
 require("express-async-errors");
 const cors = require("cors");
@@ -21,31 +23,13 @@ const express = require("express");
 const app = express();
 
 // cors
-app.use(cors());
-
-// Middleware to allow CORS
-app.use((req, res, next) => {
-  // Set the allowed origin to http://localhost:3000 (your front-end application's origin)
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-
-  // Allow credentials (cookies, HTTP authentication) to be included in the request
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-
-  // Allow specific headers to be exposed to the browser
-  res.setHeader(
-    "Access-Control-Expose-Headers",
-    "Content-Length, X-Request-ID"
-  );
-
-  // Allow specific HTTP methods for the preflight requests
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-
-  // Set the allowed headers for the actual requests
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  // Continue to the next middleware
-  next();
-});
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 // compress all responses
 app.use(compression());
