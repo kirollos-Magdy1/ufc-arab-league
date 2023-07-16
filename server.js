@@ -22,7 +22,6 @@ const app = express();
 
 // cors
 app.use(cors());
-app.options("*", cors());
 
 // compress all responses
 app.use(compression());
@@ -46,6 +45,7 @@ app.use(passport.session());
 // database connection
 const connectDB = require("./db/connect");
 
+/*
 // middleware
 app.use(express.json({ limit: "20kb" }));
 
@@ -56,9 +56,9 @@ const limiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
-
 // Apply the rate limiting middleware to all requests
 app.use(limiter);
+*/
 
 // prevent HTTP Parameter Pollution
 app.use(hpp());
