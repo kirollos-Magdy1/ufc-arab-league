@@ -84,11 +84,9 @@ exports.registerOTP = async (req, res) => {
 };
 
 exports.loginOTP = async (req, res) => {
-  const { email, name } = req.body;
+  const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) throw new CustomError.BadRequestError("user email not exist");
-  if (user.verified)
-    throw new CustomError.BadRequestError("user email already verified");
 
   const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
   const hashedVerificationCode = crypto
@@ -101,7 +99,7 @@ exports.loginOTP = async (req, res) => {
   user.verificationCodeExpiresAt = Date.now() + fiveMins;
 
   await sendVerificationEmail({
-    name,
+    name: user.name,
     email,
     verificationCode,
   });
