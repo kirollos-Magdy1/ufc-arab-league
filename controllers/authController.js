@@ -31,8 +31,10 @@ exports.register = async (req, res) => {
     id: user._id,
     role: user.role,
   };
-  attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.CREATED).json({ user: tokenUser });
+  const token = attachCookiesToResponse({ res, user: tokenUser });
+
+  // res.status(StatusCodes.CREATED).json({ user: tokenUser });
+  res.status(StatusCodes.CREATED).json({ token });
 };
 
 exports.login = async (req, res) => {
@@ -141,8 +143,10 @@ exports.verifyUser = async (req, res) => {
     role: user.role,
   };
   //res.redirect("../../../user");
-  attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.CREATED).json({ user: tokenUser });
+  const token = attachCookiesToResponse({ res, user: tokenUser });
+
+  // res.status(StatusCodes.CREATED).json({ user: tokenUser });
+  res.status(StatusCodes.CREATED).json({ token });
 };
 
 exports.logout = (req, res) => {
