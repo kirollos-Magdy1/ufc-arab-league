@@ -74,6 +74,7 @@ exports.editPredictions = async (req, res) => {
 */
 
 exports.getMyPredictions = async (req, res) => {
+  console.log(req.user);
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
 
   const myPredictions = await UserPrediction.findOne({

@@ -11,14 +11,29 @@ const CustomError = require("../errors");
 exports.googleAuth = passport.authenticate("google", { scope: ["profile"] });
 
 exports.googleAuthRedirect = async (req, res) => {
-  res.redirect("../../user");
+  console.log("inside redirect");
+  const { user } = req;
+
+  const tokenUser = {
+    name: user.name,
+    id: user._id,
+    role: user.role,
+  };
+
+  const token = attachCookiesToResponse({ res, user: tokenUser });
+  res.status(StatusCodes.CREATED).json({ token });
+  // res.redirect("../../user");
 };
-/*
-exports.logout = async (req, res) => {
+
+exports.logout = (req, res) => {
+  res.cookie("token", "logout", {
+    withCredentials: true,
+    httpOnly: false,
+    expires: new Date(Date.now() + 1000),
+  });
   req.logout();
-  res.status(StatusCodes.OK).send({ msg: "user logged out" });
+  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
-*/
 
 exports.register = async (req, res) => {
   const userExists = await User.findOne({ email: req.body.email });
@@ -145,24 +160,4 @@ exports.verifyUser = async (req, res) => {
 
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
   res.status(StatusCodes.CREATED).json({ token });
-};
-
-exports.logout = (req, res) => {
-  res.cookie("token", "logout", {
-    withCredentials: true,
-    httpOnly: false,
-    expires: new Date(Date.now() + 1000),
-  });
-
-  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
-};
-
-exports.logout = (req, res) => {
-  res.cookie("token", "logout", {
-    withCredentials: true,
-    httpOnly: false,
-    expires: new Date(Date.now() + 1000),
-  });
-  req.logout();
-  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
