@@ -7,6 +7,7 @@ const { StatusCodes } = require("http-status-codes");
 const Fight = require("../models/Fight");
 const UserPrediction = require("../models/UserPredictions");
 const { sensitizeUser } = require("../utils/sensitizeData");
+const CustomError = require("../errors");
 
 // @desc    get the upcoming event fights
 // @route   GET /api/v1/user/upcomingEvent
@@ -135,4 +136,20 @@ exports.getProfile = async (req, res) => {
   res.status(StatusCodes.OK).send({ data: sensitizeUser(user) });
 };
 
-exports.updateProfile = async (req, res) => {};
+exports.updateProfile = async (req, res) => {
+  const { newName } = req.body;
+  const user = await User.find({ name: newName });
+  if (user)
+    throw new CustomError.BadRequestError(
+      `username already exists, try another one `
+    );
+
+  await user.findOneAndUpdate(
+    { _id: req.body.id },
+    { name: newName },
+    {
+      runValidators: true,
+    }
+  );
+  res.status(StatusCodes.OK).json({ msg: "username updated" });
+};

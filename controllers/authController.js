@@ -29,7 +29,7 @@ exports.logout = (req, res) => {
   res.cookie("token", "logout", {
     withCredentials: true,
     httpOnly: false,
-    expires: new Date(Date.now() + 1000),
+    expires: new Date(Date.now()),
   });
   req.logout();
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
