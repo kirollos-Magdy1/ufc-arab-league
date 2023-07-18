@@ -33,7 +33,7 @@ app.use(
 
 app.use((req, res, next) => {
   // Set the allowed origin to http://localhost:3000 (your front-end application's origin)
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
   // Allow credentials (cookies, HTTP authentication) to be included in the request
   res.setHeader("Access-Control-Allow-Credentials", "true");
