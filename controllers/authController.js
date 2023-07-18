@@ -115,6 +115,7 @@ exports.verifyUser = async (req, res) => {
     message: "Account verified successfully",
     success: true,
     user: sensitizeUser(user),
+    token,
   });
 };
 
