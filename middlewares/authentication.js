@@ -3,9 +3,10 @@ const { isTokenValid } = require("../utils/jwt");
 
 const authenticate = async (req, res, next) => {
   const token = req.cookies.token;
+  console.log(token);
 
   if (!token) {
-    throw new BadRequestError("authentication Invalid");
+    throw new BadRequestError("no token: authentication Invalid");
   }
   try {
     const { name, id, role } = isTokenValid({ token });
