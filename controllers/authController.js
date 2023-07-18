@@ -107,6 +107,7 @@ exports.verifyUser = async (req, res) => {
     httpOnly: false,
     withCredentials: true,
     expires: new Date(Date.now() + tenDays),
+    sameSite: "None",
     secure: process.env.NODE_ENV === "production",
   });
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
