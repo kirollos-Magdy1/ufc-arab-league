@@ -25,7 +25,7 @@ const app = express();
 // cors
 app.use(
   cors({
-    origin: "*",
+    origin: ["http://localhost:3000", "https://ufc-arab-league.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -33,8 +33,14 @@ app.use(
 
 app.use((req, res, next) => {
   // Set the allowed origin to http://localhost:3000 (your front-end application's origin)
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "https://ufc-arab-league.vercel.app",
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   // Allow credentials (cookies, HTTP authentication) to be included in the request
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
