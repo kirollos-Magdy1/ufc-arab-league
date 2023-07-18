@@ -1,11 +1,11 @@
-const { UnauthenticatedError } = require("../errors");
+const { UnauthenticatedError, BadRequestError } = require("../errors");
 const { isTokenValid } = require("../utils/jwt");
 
 const authenticate = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    throw new UnauthenticatedError("authentication Invalid");
+    throw new BadRequestError("authentication Invalid");
   }
   try {
     const { name, id, role } = isTokenValid({ token });
