@@ -4,8 +4,6 @@ const passport = require("passport");
 const https = require("https");
 
 const {
-  googleAuth,
-  googleAuthRedirect,
   logout,
   login,
   register,
@@ -16,14 +14,6 @@ const {
 
 router.post("/register", register);
 router.post("/login", login);
-
-router.get("/google", googleAuth);
-
-router.get(
-  "/google/redirect",
-  passport.authenticate("google"),
-  googleAuthRedirect
-);
 
 router.route("/otp/register").post(registerOTP);
 router.route("/otp/login").post(loginOTP);

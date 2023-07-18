@@ -2,69 +2,11 @@ const { isTokenValid } = require("../utils/jwt");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
 const passport = require("passport");
-const { attachCookiesToResponse } = require("../utils/jwt");
+const { createJWT } = require("../utils/jwt");
 const sendVerificationEmail = require("../utils/sendVerficationEmail");
 const User = require("../models/User");
 const CustomError = require("../errors");
-// send google consent  screen
-
-exports.googleAuth = passport.authenticate("google", { scope: ["profile"] });
-
-exports.googleAuthRedirect = async (req, res) => {
-  console.log("inside redirect");
-  const { user } = req;
-
-  const tokenUser = {
-    name: user.name,
-    id: user._id,
-    role: user.role,
-  };
-
-  const token = attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.CREATED).json({ token });
-  // res.redirect("../../user");
-};
-
-exports.logout = (req, res) => {
-  res.cookie("token", "logout", {
-    withCredentials: true,
-    httpOnly: false,
-    expires: new Date(Date.now()),
-  });
-  req.logout();
-  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
-};
-
-exports.register = async (req, res) => {
-  const userExists = await User.findOne({ email: req.body.email });
-
-  if (userExists)
-    throw new CustomError.BadRequestError("user email already exists");
-
-  const user = await User.create(req.body);
-  const tokenUser = {
-    name: user.name,
-    id: user._id,
-    role: user.role,
-  };
-  const token = attachCookiesToResponse({ res, user: tokenUser });
-
-  // res.status(StatusCodes.CREATED).json({ user: tokenUser });
-  res.status(StatusCodes.CREATED).json({ token });
-};
-
-exports.login = async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-
-  const tokenUser = {
-    name: user.name,
-    id: user._id,
-    role: user.role,
-  };
-  attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.CREATED).json({ user: tokenUser });
-};
+const { sensitizeUser } = require("../utils/sensitizeData");
 
 exports.registerOTP = async (req, res) => {
   console.log(req.body);
@@ -154,10 +96,83 @@ exports.verifyUser = async (req, res) => {
     name: user.name,
     id: user._id,
     role: user.role,
+    overallScore: user.overallScore,
   };
-  //res.redirect("../../../user");
-  const token = attachCookiesToResponse({ res, user: tokenUser });
 
+  const token = createJWT(tokenUser);
+
+  const tenDays = 1000 * 60 * 60 * 24 * 10;
+
+  res.cookie("token", token, {
+    httpOnly: false,
+    withCredentials: true,
+    expires: new Date(Date.now() + tenDays),
+    secure: process.env.NODE_ENV === "production",
+  });
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
-  res.status(StatusCodes.CREATED).json({ token });
+  res.status(StatusCodes.CREATED).json({
+    message: "Account verified successfully",
+    success: true,
+    user: sensitizeUser(user),
+  });
+};
+
+// FOR TESTING
+
+exports.logout = (req, res) => {
+  res.cookie("token", "logout", {
+    withCredentials: true,
+    httpOnly: false,
+    expires: new Date(Date.now()),
+  });
+  req.logout();
+  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
+};
+
+exports.register = async (req, res) => {
+  const userExists = await User.findOne({ email: req.body.email });
+
+  if (userExists)
+    throw new CustomError.BadRequestError("user email already exists");
+
+  const user = await User.create(req.body);
+
+  const tokenUser = {
+    name: user.name,
+    id: user._id,
+    role: user.role,
+    overallScore: user.overallScore,
+  };
+
+  const token = createJWT(tokenUser);
+
+  const tenDays = 1000 * 60 * 60 * 24 * 10;
+
+  res.cookie("token", token, {
+    httpOnly: false,
+    withCredentials: true,
+    expires: new Date(Date.now() + tenDays),
+    secure: process.env.NODE_ENV === "production",
+  });
+  // res.status(StatusCodes.CREATED).json({ user: tokenUser });
+  res.status(StatusCodes.CREATED).json({
+    message: "User User registered please verify your account",
+    success: true,
+    user: sensitizeUser(user),
+  });
+};
+
+exports.login = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  const tokenUser = {
+    name: user.name,
+    id: user._id,
+    role: user.role,
+  };
+  attachCookiesToResponse({ res, user: tokenUser });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ msg: "User signed in please verify your account", success: true });
 };

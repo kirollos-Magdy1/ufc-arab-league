@@ -1,22 +1,25 @@
 const { UnauthenticatedError, BadRequestError } = require("../errors");
+const User = require("../models/User");
 const { isTokenValid } = require("../utils/jwt");
+const jwt = require("jsonwebtoken");
 
 const authenticate = async (req, res, next) => {
   const token = req.cookies.token;
   console.log(token);
 
   if (!token) {
-    throw new BadRequestError("no token: authentication Invalid");
+    throw new BadRequestError(
+      "no token: authentication Invalid: no token provided"
+    );
   }
   try {
-    const { name, id, role } = isTokenValid({ token });
-
-    req.user = { name, id, role };
+    const userToken = isTokenValid(token);
+    req.user = userToken;
     console.log(req.user);
     next();
   } catch (error) {
     console.log(error);
-    throw new UnauthenticatedError("authentication Invalid");
+    throw new UnauthenticatedError("authentication Invalid: error");
   }
 };
 

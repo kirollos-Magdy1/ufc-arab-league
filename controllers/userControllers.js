@@ -39,8 +39,10 @@ exports.submitPredictions = async (req, res) => {
     req.body
   );
   if (!userPrediction) await UserPrediction.create(req.body);
-
-  res.status(StatusCodes.CREATED).json({ msg: "successfully submitted" });
+  const user = req.user;
+  res
+    .status(StatusCodes.CREATED)
+    .json({ msg: "successfully submitted", data: user });
 };
 /*
 // @desc    make fights predictions for a given event.
@@ -132,8 +134,11 @@ exports.getStandings = async (req, res) => {
 exports.getMyRank = async (req, res) => {};
 
 exports.getProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
-  res.status(StatusCodes.OK).send({ data: sensitizeUser(user) });
+  console.log("inside prfile");
+  const user = req.user;
+  console.log(req.user);
+  //  const user = await User.findById(req.user.id);
+  res.status(StatusCodes.OK).send({ data: user });
 };
 
 exports.updateProfile = async (req, res) => {

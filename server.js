@@ -10,7 +10,6 @@ const hpp = require("hpp");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss");
 
-const passportSetup = require("./utils/passsport-setup");
 const cookieParser = require("cookie-parser");
 const mountRoutes = require("./routes");
 const notFoundMiddleware = require("./middlewares/not-found");
@@ -65,19 +64,6 @@ app.use(compression());
 
 // cookieParser
 app.use(cookieParser(process.env.cookieSecret));
-
-// set up session cookies
-app.use(
-  cookieSession({
-    name: "session",
-    maxAge: 60 * 60 * 1000,
-    keys: [process.env.cookieKey],
-  })
-);
-
-// initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
 
 // database connection
 const connectDB = require("./db/connect");
