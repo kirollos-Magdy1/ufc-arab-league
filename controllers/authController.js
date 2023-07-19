@@ -99,7 +99,7 @@ exports.verifyUser = async (req, res) => {
   res.cookie("token", token, {
     httpOnly: false,
     withCredentials: true,
-    expires: new Date(Date.now() + parseInt(process.env.JWT_LIFETIME)),
+    expires: new Date(Date.now() + parseInt(process.env.COOKIE_LIFETIME)),
     sameSite: "None",
     secure: process.env.NODE_ENV === "production",
   });
