@@ -12,7 +12,11 @@ exports.registerOTP = async (req, res) => {
   console.log(req.body);
   const { email, name } = req.body;
   const user = await User.findOne({ email });
+
   if (user) throw new CustomError.BadRequestError("user email already exists");
+
+  if (email.split("@")[1] !== "gmail.com")
+    throw new CustomError.BadRequestError("please enter a valid gmail");
 
   const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
   const hashedVerificationCode = crypto
@@ -30,11 +34,11 @@ exports.registerOTP = async (req, res) => {
     verified: false,
   });
 
-  await sendVerificationEmail({
-    name,
-    email,
-    verificationCode,
-  });
+  // await sendVerificationEmail({
+  //   name,
+  //   email,
+  //   verificationCode,
+  // });
 
   res.status(StatusCodes.OK).json({
     msg: `verification code sent to the email ${email} head to your inbox to verify https://mail.google.com`,
