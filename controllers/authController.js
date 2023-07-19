@@ -18,20 +18,9 @@ exports.registerOTP = async (req, res) => {
   if (email.split("@")[1] !== "gmail.com")
     throw new CustomError.BadRequestError("please enter a valid gmail");
 
-  const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
-  const hashedVerificationCode = crypto
-    .createHash("sha256")
-    .update(verificationCode)
-    .digest("hex");
-
-  const fiveMins = 5 * 60 * 1000;
-
   await User.create({
     email,
     name,
-    verificationCode: hashedVerificationCode,
-    verificationCodeExpiresAt: Date.now() + fiveMins,
-    verified: false,
   });
 
   // await sendVerificationEmail({
