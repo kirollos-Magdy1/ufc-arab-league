@@ -127,7 +127,6 @@ exports.logout = (req, res) => {
     httpOnly: false,
     expires: new Date(Date.now()),
   });
-  req.logout();
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
 

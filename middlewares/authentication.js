@@ -5,12 +5,12 @@ const jwt = require("jsonwebtoken");
 
 const authenticate = async (req, res, next) => {
   let token = null;
-  const authHeader = req.headers.authorization;
-  if (authHeader) token = authHeader.substring("Bearer ".length);
+  // const authHeader = req.headers.authorization;
+  // if (authHeader) token = authHeader.substring("Bearer ".length);
 
-  // token = req.headers["user-agent"].includes("Postman")
-  //   ? req.cookies.token
-  //   : req.headers.authorization.substring("Bearer ".length);
+  token = req.headers["user-agent"].includes("Postman")
+    ? req.cookies.token
+    : req.headers.authorization.substring("Bearer ".length);
 
   console.log("inside authenticate");
   console.log(token);
