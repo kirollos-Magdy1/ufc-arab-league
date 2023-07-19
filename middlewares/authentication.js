@@ -6,9 +6,10 @@ const jwt = require("jsonwebtoken");
 const authenticate = async (req, res, next) => {
   let token = null;
 
-  token = req.cookies.token
-    ? req.cookies.token
-    : req.headers.authorization.substring("Bearer ".length);
+  // token = req.cookies.token
+  //   ? req.cookies.token
+  //   : req.headers.authorization.substring("Bearer ".length);
+  token = req.headers.authorization.substring("Bearer ".length);
 
   console.log("inside authenticate");
   console.log(token);
