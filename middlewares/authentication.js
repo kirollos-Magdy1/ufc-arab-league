@@ -4,7 +4,9 @@ const { isTokenValid } = require("../utils/jwt");
 const jwt = require("jsonwebtoken");
 
 const authenticate = async (req, res, next) => {
-  const token = req.cookies.token;
+  let token = null;
+  const authHeader = req.headers.authorization;
+  if (authHeader) token = authHeader.substring("Bearer ".length);
   console.log(token);
 
   if (!token) {

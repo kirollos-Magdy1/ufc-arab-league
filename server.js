@@ -63,7 +63,6 @@ app.use((req, res, next) => {
 app.use(compression());
 
 // cookieParser
-app.use(cookieParser(process.env.cookieSecret));
 
 // database connection
 const connectDB = require("./db/connect");
@@ -103,6 +102,7 @@ const start = async () => {
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
+    app.use(cookieParser(process.env.cookieSecret));
     connectDB(
       process.env.NODE_ENV === "development"
         ? process.env.MONGO_URI
