@@ -105,12 +105,10 @@ exports.verifyUser = async (req, res) => {
 
   const token = createJWT(tokenUser);
 
-  const tenDays = 1000 * 60 * 60 * 24 * 10;
-
   res.cookie("token", token, {
     httpOnly: false,
     withCredentials: true,
-    expires: new Date(Date.now() + tenDays),
+    expires: new Date(Date.now() + process.env.JWT_LIFETIME),
     sameSite: "None",
     secure: process.env.NODE_ENV === "production",
   });

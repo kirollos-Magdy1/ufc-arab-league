@@ -4,17 +4,18 @@ const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      // required: [true, "Please provide name"],
-      // minlength: 3,
-      // maxlength: 50,
+      unique: [true, "username is taken: choose another one"],
+      required: [true, "Please provide name"],
+      minlength: 3,
+      maxlength: 50,
     },
     googleId: {
       type: String,
     },
     email: {
       type: String,
-      // unique: true,
-      // required: [true, "Please provide email"],
+      unique: true,
+      required: [true, "Please provide email"],
     },
     password: {
       type: String,
