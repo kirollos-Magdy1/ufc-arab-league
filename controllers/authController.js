@@ -50,6 +50,7 @@ exports.loginOTP = async (req, res) => {
   user.verificationCodeExpiresAt = Date.now() + fiveMins;
 
   await user.save();
+  console.log(user);
 
   await sendVerificationEmail({
     name: user.name,
@@ -74,6 +75,7 @@ exports.verifyUser = async (req, res) => {
     verificationCode: hashedVerificationCode,
     verificationCodeExpiresAt: { $gt: Date.now() },
   });
+  console.log(user);
   if (!user)
     throw new CustomError.BadRequestError(
       `Verification code is invalid or expired`
@@ -97,7 +99,7 @@ exports.verifyUser = async (req, res) => {
   res.cookie("token", token, {
     httpOnly: false,
     withCredentials: true,
-    expires: new Date(Date.now() + process.env.JWT_LIFETIME),
+    expires: new Date(Date.now() + parseInt(process.env.JWT_LIFETIME)),
     sameSite: "None",
     secure: process.env.NODE_ENV === "production",
   });

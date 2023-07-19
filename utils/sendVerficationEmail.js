@@ -1,7 +1,7 @@
 const sendEmail = require("./sendEmail");
 
 const sendVerificationEmail = async ({ name, email, verificationCode }) => {
-  const message = `<p>Please confirm your email by the following verification code
+  const message = `<p>Please login to your account by the following verification code
   ${verificationCode} in no more than 5 minutes</a> </p>`;
 
   return sendEmail({
