@@ -5,8 +5,12 @@ const jwt = require("jsonwebtoken");
 
 const authenticate = async (req, res, next) => {
   let token = null;
-  const authHeader = req.headers.authorization;
-  if (authHeader) token = authHeader.substring("Bearer ".length);
+
+  token = req.cookies.token
+    ? req.cookies.token
+    : req.headers.authorization.substring("Bearer ".length);
+
+  console.log("inside authenticate");
   console.log(token);
 
   if (!token) {
@@ -15,8 +19,8 @@ const authenticate = async (req, res, next) => {
     );
   }
   try {
-    const userToken = isTokenValid(token);
-    req.user = userToken;
+    const { name, id, role, overallScore } = isTokenValid(token);
+    req.user = { name, id, role, overallScore };
     console.log(req.user);
     next();
   } catch (error) {

@@ -147,7 +147,8 @@ exports.register = async (req, res) => {
   };
 
   const token = createJWT(tokenUser);
-
+  console.log("token");
+  console.log(token);
   const tenDays = 1000 * 60 * 60 * 24 * 10;
 
   res.cookie("token", token, {
