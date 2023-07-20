@@ -165,8 +165,17 @@ exports.login = async (req, res) => {
     name: user.name,
     id: user._id,
     role: user.role,
+    overallScore: user.overallScore,
   };
-  attachCookiesToResponse({ res, user: tokenUser });
+
+  const token = createJWT(tokenUser);
+  res.cookie("token", token, {
+    httpOnly: false,
+    withCredentials: true,
+    expires: new Date(Date.now() + tenDays),
+    secure: process.env.NODE_ENV === "production",
+  });
+
   res
     .status(StatusCodes.CREATED)
     .json({ msg: "User signed in please verify your account", success: true });
