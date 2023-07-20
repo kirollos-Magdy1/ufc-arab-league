@@ -146,7 +146,7 @@ exports.register = async (req, res) => {
   res.cookie("token", token, {
     httpOnly: false,
     withCredentials: true,
-    expires: new Date(Date.now() + tenDays),
+    expires: new Date(Date.now() + parseInt(process.env.COOKIE_LIFETIME)),
     secure: process.env.NODE_ENV === "production",
   });
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
