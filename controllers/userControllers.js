@@ -77,7 +77,6 @@ exports.editPredictions = async (req, res) => {
 */
 
 exports.getMyPredictions = async (req, res) => {
-  console.log(req.user);
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
   console.log(req.user.id);
   const myPredictions = await UserPrediction.findOne({
@@ -92,7 +91,7 @@ exports.getMyPredictions = async (req, res) => {
     });
 
   if (!myPredictions)
-    res
+    return res
       .status(StatusCodes.NOT_FOUND)
       .send({ msg: "you did not submit predictions" });
 
