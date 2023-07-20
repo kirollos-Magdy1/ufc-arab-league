@@ -89,12 +89,12 @@ exports.getMyPredictions = async (req, res) => {
       model: "Fight",
       select: "-results",
     });
-
+  /*
   if (!myPredictions)
     return res
       .status(StatusCodes.NOT_FOUND)
       .send({ msg: "you did not submit predictions" });
-
+*/
   res.status(StatusCodes.OK).json({ data: myPredictions });
 };
 
