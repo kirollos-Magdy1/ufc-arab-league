@@ -102,9 +102,9 @@ exports.verifyUser = async (req, res) => {
   };
 
   const token = createJWT(tokenUser);
-
+  /*
   const cookieLifetime = parseInt(process.env.COOKIE_LIFETIME);
-  const expirationDate = new Date(Date.now() + cookieLifetime);
+  const expirationDate = new Date(Number(Date.now()) + cookieLifetime);
 
   res.cookie("token", token, {
     httpOnly: false,
@@ -113,6 +113,19 @@ exports.verifyUser = async (req, res) => {
     sameSite: "None",
     secure: process.env.NODE_ENV === "production",
   });
+*/
+  const period = 1000 * 60 * 60 * 24 * 1000;
+
+  const expirationDate = new Date(Date.now() + period);
+
+  res.cookie("token", token, {
+    httpOnly: false,
+    withCredentials: true,
+    expires: expirationDate,
+    sameSite: "None",
+    secure: process.env.NODE_ENV === "production",
+  });
+
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
   res.status(StatusCodes.CREATED).json({
     message: "Account verified successfully",
@@ -151,20 +164,22 @@ exports.register = async (req, res) => {
   const token = createJWT(tokenUser);
   console.log("token");
   console.log(token);
-  const tenDays = 1000 * 60 * 60 * 24 * 10;
+
+  const period = 1000 * 60 * 60 * 24 * 1000;
+
+  const expirationDate = new Date(Date.now() + period);
 
   res.cookie("token", token, {
     httpOnly: false,
     withCredentials: true,
-    expires: new Date(Date.now()),
+    expires: expirationDate,
+    sameSite: "None",
     secure: process.env.NODE_ENV === "production",
   });
-  // res.status(StatusCodes.CREATED).json({ user: tokenUser });
-  res.status(StatusCodes.CREATED).json({
-    message: "User User registered please verify your account",
-    success: true,
-    user: sensitizeUser(user),
-  });
+
+  res
+    .status(StatusCodes.CREATED)
+    .json({ msg: "User signed in please verify your account", success: true });
 };
 
 exports.login = async (req, res) => {
