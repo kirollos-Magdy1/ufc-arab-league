@@ -103,10 +103,13 @@ exports.verifyUser = async (req, res) => {
 
   const token = createJWT(tokenUser);
 
+  const cookieLifetime = parseInt(process.env.COOKIE_LIFETIME);
+  const expirationDate = new Date(Date.now() + cookieLifetime);
+
   res.cookie("token", token, {
     httpOnly: false,
     withCredentials: true,
-    expires: new Date(Date.now() + parseInt(process.env.COOKIE_LIFETIME)),
+    expires: expirationDate,
     sameSite: "None",
     secure: process.env.NODE_ENV === "production",
   });
