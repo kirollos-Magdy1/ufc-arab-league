@@ -18,9 +18,16 @@ exports.registerOTP = async (req, res) => {
   if (email.split("@")[1] !== "gmail.com")
     throw new CustomError.BadRequestError("please enter a valid gmail");
 
+  const lowercaseName = name.toLowerCase();
+
+  if (await User.findOne({ name: lowercaseName }))
+    throw new CustomError.BadRequestError(
+      "username is taken: choose another one"
+    );
+
   await User.create({
     email,
-    name,
+    name: lowercaseName,
   });
 
   // await sendVerificationEmail({

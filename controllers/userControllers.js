@@ -17,8 +17,10 @@ exports.getUpcomingEventEvent = async (req, res) => {
   // console.log(req.user._id.toString());
   // console.log(req.headers.cookie);
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
+  console.log(await Event.findOne());
+
   const fights = await Fight.find({ eventId: latestEvent._id }).select(
-    "-results"
+    "-results -order"
   );
   res.status(StatusCodes.OK).json({
     data: {

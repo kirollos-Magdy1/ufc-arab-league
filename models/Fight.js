@@ -1,3 +1,4 @@
+const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const FightSchema = new mongoose.Schema(
@@ -35,6 +36,7 @@ const FightSchema = new mongoose.Schema(
         default: "pending",
       },
     },
+    order: Number,
   },
   { timestamps: true }
 );
