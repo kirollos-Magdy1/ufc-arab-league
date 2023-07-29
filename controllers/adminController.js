@@ -50,9 +50,9 @@ exports.createUpcomingEvent = async (req, res) => {
 exports.calcScores = async (req, res) => {
   const { eventId } = req.params;
   const points = {
-    "main-card": [10, 5],
-    prelims: [7, 3],
-    "early-prelims": [5, 2],
+    winnerFighter: 3,
+    winMethod: 2,
+    winTime: 1,
   };
   const fights = await Fight.find({ eventId });
   const userPredictions = await UserPredictions.find({
@@ -65,22 +65,18 @@ exports.calcScores = async (req, res) => {
       const fight = fights.find((fight) => {
         return fight._id.toString() === prediction.fightId.toString();
       });
-      if (
-        prediction.winnerFighter === fight.results.winnerFighter &&
-        prediction.winMethod === fight.results.winMethod
-      ) {
-        userPrediction.score +=
-          (points[fight["tag"]][0] + points[fight["tag"]][1]) * 2;
-      } else if (prediction.winnerFighter === fight.results.winnerFighter) {
-        userPrediction.score += points[fight["tag"]][0];
-      } else if (prediction.winMethod === fight.results.winMethod) {
-        userPrediction.score += points[fight["tag"]][1];
-      }
+      userPrediction.score +=
+        (prediction.winnerFighter === fight.results.winnerFighter) *
+          points.winnerFighter +
+        (prediction.winMethod === fight.results.winMethod) * points.winMethod +
+        (prediction.winTime === fight.results.winTime) * points.winTime;
     });
     // console.log(userPrediction.score);
     await userPrediction.save();
   });
-  res.status(StatusCodes.CREATED).json({ msg: "results calculated" });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ msg: "results calculated", score: userPredictions.score });
 };
 
 // @desc    create standings based on user prediction score
