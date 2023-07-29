@@ -20,8 +20,9 @@ const EventSchema = new mongoose.Schema(
       default: 0,
     },
     open: {
-      type:Boolean,
+      type: Boolean,
       default: true,
+    },
   },
   { timestamps: true }
 );
