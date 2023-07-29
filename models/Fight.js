@@ -34,6 +34,11 @@ const FightSchema = new mongoose.Schema(
         enum: ["KO/TKO", "Submission", "Decision", "pending"],
         default: "pending",
       },
+      winTime: {
+        type: String,
+        enum: ["over", "under", "pending"],
+        default: "pending",
+      },
     },
   },
   { timestamps: true }

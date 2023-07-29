@@ -29,8 +29,19 @@ exports.getUpcomingEventEvent = async (req, res) => {
   });
 };
 
+exports.getAllEvents = async (req, res) => {
+  const events = await Event.find().sort({ createdAt: -1 });
+  res.status(StatusCodes.OK).json({
+    data: {
+      events,
+    },
+  });
+};
+
 exports.submitPredictions = async (req, res) => {
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
+  if (!latestEvent.open)
+    throw new CustomError.BadRequestError("Predictions closed for this event");
 
   req.body = { ...req.body, eventId: latestEvent._id, userId: req.user.id };
 
