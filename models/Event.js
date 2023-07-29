@@ -19,6 +19,9 @@ const EventSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    open: {
+      type:Boolean,
+      default: true,
   },
   { timestamps: true }
 );
