@@ -23,11 +23,11 @@ const UserPredictionSchema = new mongoose.Schema(
           enum: ["KO/TKO", "Submission", "Decision"],
           required: true,
         },
-        winTime: {
+          winTime: {
           type: String,
           enum: ["over", "under"],
           required: true,
-        },
+        }
       },
     ],
     score: {

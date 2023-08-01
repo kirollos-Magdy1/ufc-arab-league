@@ -17,8 +17,10 @@ exports.getUpcomingEventEvent = async (req, res) => {
   // console.log(req.user._id.toString());
   // console.log(req.headers.cookie);
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
+  console.log(await Event.findOne());
+
   const fights = await Fight.find({ eventId: latestEvent._id }).select(
-    "-results"
+    "-results -order"
   );
   res.status(StatusCodes.OK).json({
     data: {
@@ -31,6 +33,8 @@ exports.getUpcomingEventEvent = async (req, res) => {
 
 exports.submitPredictions = async (req, res) => {
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
+  if (!latestEvent.open)
+    throw new CustomError.BadRequestError("Predictions closed for this event");
 
   req.body = { ...req.body, eventId: latestEvent._id, userId: req.user.id };
 
@@ -39,8 +43,10 @@ exports.submitPredictions = async (req, res) => {
     req.body
   );
   if (!userPrediction) await UserPrediction.create(req.body);
-
-  res.status(StatusCodes.CREATED).json({ msg: "successfully submitted" });
+  const user = req.user;
+  res
+    .status(StatusCodes.CREATED)
+    .json({ msg: "successfully submitted", data: user });
 };
 /*
 // @desc    make fights predictions for a given event.
@@ -75,9 +81,8 @@ exports.editPredictions = async (req, res) => {
 */
 
 exports.getMyPredictions = async (req, res) => {
-  console.log(req.user);
   const latestEvent = await Event.findOne().sort({ createdAt: -1 }).limit(1);
-
+  console.log(req.user.id);
   const myPredictions = await UserPrediction.findOne({
     userId: req.user.id,
     eventId: latestEvent._id,
@@ -90,7 +95,7 @@ exports.getMyPredictions = async (req, res) => {
     });
 
   if (!myPredictions)
-    res
+    return res
       .status(StatusCodes.NOT_FOUND)
       .send({ msg: "you did not submit predictions" });
 
@@ -132,8 +137,11 @@ exports.getStandings = async (req, res) => {
 exports.getMyRank = async (req, res) => {};
 
 exports.getProfile = async (req, res) => {
-  const user = await User.findById(req.user.id);
-  res.status(StatusCodes.OK).send({ data: sensitizeUser(user) });
+  console.log("inside prfile");
+  const user = req.user;
+  console.log(req.user);
+  //  const user = await User.findById(req.user.id);
+  res.status(StatusCodes.OK).send({ data: user });
 };
 
 exports.updateProfile = async (req, res) => {

@@ -1,3 +1,4 @@
+const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const FightSchema = new mongoose.Schema(
@@ -34,7 +35,13 @@ const FightSchema = new mongoose.Schema(
         enum: ["KO/TKO", "Submission", "Decision", "pending"],
         default: "pending",
       },
+      winTime: {
+      type: String,
+      enum: ["over", "under","pending"],
+      default: "pending",
+      }
     },
+    order: Number,
   },
   { timestamps: true }
 );
