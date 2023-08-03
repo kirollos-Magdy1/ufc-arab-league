@@ -12,8 +12,8 @@ const {
   verifyUser,
 } = require("../controllers/authController");
 
-router.post("/register", register);
-router.post("/login", login);
+// router.post("/register", register);
+// router.post("/login", login);
 
 router.route("/otp/register").post(registerOTP);
 router.route("/otp/login").post(loginOTP);
