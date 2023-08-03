@@ -132,7 +132,7 @@ exports.logout = (req, res) => {
   });
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
-
+/*
 exports.register = async (req, res) => {
   const userExists = await User.findOne({ email: req.body.email });
 
@@ -190,3 +190,4 @@ exports.login = async (req, res) => {
     .status(StatusCodes.CREATED)
     .json({ msg: "User signed in please verify your account", success: true });
 };
+*/
